@@ -1,0 +1,115 @@
+<div class="container mh-100vh px-3">
+  <div class="row">
+    <div class="col-md-8 offset-md-2 col-sm-12 offset-sm-0">
+      <div class="text-justify mt-5">
+        <h1 class="text-center text-smallcaps">Brugner's blog</h1>
+        <p>Hello and welcome to my blog. Here, I'll be sharing my experiences and insights about software development, with a focus on .NET. I'm passionate about this field and I'm excited to share my thoughts with you. Along the way, I may also share some random musings and personal thoughts. I hope you'll find my blog informative and engaging somehow.</p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading" class="row">
+    <div class="col-md-8 offset-md-2 col-sm-12 offset-sm-0 mt-5">
+      <h4>Tags</h4>
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <button class="btn btn-link" [ngClass]="{ 'text-warning': !selectedTag }" (click)="getPosts(null)">All</button>
+        </li>
+        <li *ngFor="let tag of allTags" class="nav-item">
+          <button class="btn btn-link" [ngClass]="{ 'text-warning': selectedTag === tag }" (click)="getPosts(tag)">#{{ tag }}</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="row">
+    <div class="col-md-8 offset-md-2 col-sm-12 offset-sm-0 mt-5">
+      <h4>Tags</h4>
+      <ul class="nav nav-pills">
+        <li *ngFor="let item of [].constructor(3)" class="nav-item">
+          <button class="btn btn-link">...</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div *ngIf="isAuthenticated && !isLoading">
+    <div class="row">
+      <div class="col-md-8 offset-md-2 col-sm-12 offset-sm-0 mt-5">
+        <div class="card my-5">
+          <div class="card-header">
+            Editor's Zone
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Attention!</h5>
+            <p class="card-text"> You can add as many new posts as you want. Let's go!</p>
+            <a routerLink="/posts" class="btn btn-primary me-3">
+              <span class="btn-label"><i class="bi bi-list"></i></span>
+              All posts
+            </a>
+            <a routerLink="/posts/new" class="btn btn-outline-primary">
+              <span class="btn-label"><i class="bi bi-pencil"></i></span>
+              Write a new post
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading" class="row">
+    <div class="col-md-8 offset-md-2 col-sm-12 offset-sm-0 mt-5">
+      <div *ngFor="let post of posts">
+        <article class="mb-5">
+          <div class="post-content">
+            <h3 class="post-title mb-0 text-smallcaps">
+              <a routerLink="/blog/post/{{ post.slug }}">{{ post.title }}</a>
+            </h3>
+
+            <ul class="d-flex list-unstyled mb-0">
+              <li><code>Published {{ post.createdAt | timeAgo }}</code></li>
+            </ul>
+
+            <div class="text-justify">
+              <span>{{ post.summary }}</span>
+            </div>
+
+            <ul class="d-flex list-unstyled">
+              <li *ngFor="let tag of post.tags">
+                <a class="me-3" routerLink="/blog/tag/{{ tag }}">#{{ tag }}</a>
+              </li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="row">
+    <div class="col-md-8 offset-md-2 col-sm-12 offset-sm-0 mt-5">
+      <div *ngFor="let item of [].constructor(3);">
+        <article class="mb-5">
+          <div class="post-content">
+            <h3 class="post-title mb-0 text-smallcaps">
+              <a>Loading post</a>
+            </h3>
+
+            <ul class="d-flex list-unstyled mb-0">
+              <li><code>Published a long time ago</code></li>
+            </ul>
+
+            <div class="text-justify">
+              <span>Hang on a second! Posts are being fetch..</span>
+            </div>
+
+            <ul class="d-flex list-unstyled">
+              <li>
+                <a class="me-3">#tag</a>
+              </li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,96 @@
+<div class="container mh-100vh px-3">
+  <div class="row">
+    <div class="col-md-8 offset-md-2 col-sm-12 offset-sm-0">
+      <div class="text-justify mt-5">
+        <h1 class="text-center text-smallcaps">{{(isNew) ? 'New post' : 'Edit post'}}</h1>
+        <p>Complete all the fields.</p>
+      </div>
+
+      <form [formGroup]="postForm" (keydown.enter)="$event.preventDefault()" (keydown.shift.enter)="$event.preventDefault()">
+
+        <input type="hidden" formControlName="id">
+
+        <div class="mb-3">
+          <label for="title">Title</label>
+          <input type="text" class="form-control" formControlName="title" placeholder="Title" maxlength="150" required [ngClass]="{ 'is-invalid': isSubmitted && title?.errors }">
+          <span *ngIf="title?.invalid && title?.errors?.['required'] && (title?.dirty || title?.touched)" class="text-danger">
+            A title is required.
+          </span>
+          <span *ngIf="title?.invalid && title?.errors?.['minlength'] && (title?.dirty || title?.touched)" class="text-danger">
+            Enter at least 10 characters.
+          </span>
+          <span *ngIf="title?.invalid && title?.errors?.['maxlength'] && (title?.dirty || title?.touched)" class="text-danger">
+            Max length must be 150.
+          </span>
+        </div>
+
+        <div class="mb-3">
+          <label for="summary">Summary</label>
+          <input type="text" class="form-control" formControlName="summary" placeholder="The post summary" maxlength="200" required [ngClass]="{ 'is-invalid': isSubmitted && summary?.errors }">
+          <span *ngIf="summary?.invalid && summary?.errors?.['required'] && (summary?.dirty || summary?.touched)" class="text-danger">
+            A summary is required.
+          </span>
+          <span *ngIf="summary?.invalid && summary?.errors?.['minlength'] && (summary?.dirty || summary?.touched)" class="text-danger">
+            Enter at least 10 characters.
+          </span>
+          <span *ngIf="summary?.invalid && summary?.errors?.['maxlength'] && (summary?.dirty || summary?.touched)" class="text-danger">
+            Max length must be 200.
+          </span>
+        </div>
+
+        <div class="mb-3">
+          <editor apiKey="bigbujgb61fxmvlotqh3p6v39qhsj084matu83gk9hv5ku1x" formControlName="content" [init]="editorConfig"></editor>
+          <span *ngIf="content?.invalid && content?.errors?.['required'] && (content?.dirty || content?.touched)" class="text-danger">
+            Content is required and up to 1.000.000 characters long.
+          </span>
+        </div>
+
+        <div class="mb-3">
+          <label for="tag">Tags</label>
+          <div class="w-100">
+            <ng-autocomplete formControlName="tag" [data]="allTags" (selected)='selectEvent($event)' (inputChanged)='onChangeSearch($event)' [itemTemplate]="itemTemplate" (keydown.enter)="onKeyDownEvent($event)" placeholder="Add a tag..">
+            </ng-autocomplete>
+
+            <ng-template #itemTemplate let-item>
+              <a [innerHTML]="item"></a>
+            </ng-template>
+          </div>
+
+          <ul class="mt-4">
+            <li *ngFor="let tag of selectedTags"><a [routerLink]="" class="pointer" (click)="removeTag(tag)">#{{tag}}</a></li>
+          </ul>
+
+          <div class="alert alert-info mt-2" role="alert">
+            <strong>Heads up!</strong> Start to write and select a tag or hit enter to create a new one. Then you can click one to remove it.
+          </div>
+        </div>
+
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" formControlName="isDraft">
+          <label class="form-check-label" for="isDraft">Is draft?</label>
+        </div>
+
+        <div class="alert alert-info mt-2" role="alert">
+          <strong>Heads up!</strong> Drafts will be saved but not seen by readers. Only editors can see drafts.
+        </div>
+
+        <div class="mb-3 buttons-row mt-5">
+          <button (click)="deletePost()" type="button" class="btn btn-labeled btn-danger">
+            <span class="btn-label"><i class="bi bi-trash"></i></span>
+            Delete
+          </button>
+
+          <a routerLink="/blog" class="btn btn-warning btn-labeled float-end">
+            <span class="btn-label"><i class="bi bi-arrow-left"></i></span>
+            Cancel
+          </a>
+
+          <button type="button" class="btn btn-labeled btn-primary float-end me-3" (click)="submitForm()" [disabled]="!postForm.valid || isSubmitted || selectedTags.length === 0">
+            <span class="btn-label"><i class="bi bi-save"></i></span>
+            {{(isNew) ? 'Create' : 'Update'}}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

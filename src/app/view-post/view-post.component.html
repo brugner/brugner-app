@@ -1,0 +1,40 @@
+<div class="container mh-100vh px-3">
+  <div class="row">
+    <div class="col-md-8 offset-md-2 col-sm-12 offset-sm-0">
+      <div class="mt-5 text-center">
+        <h1 class="text-center text-smallcaps">{{ post.title }}</h1>
+        <span class="text-center mb-0 me-5"><i class="bi bi-calendar"></i> Published {{post.createdAt | timeAgo}}</span>
+        <span class="text-center"><i class="bi bi-clock"></i> {{post.content | readingTime}}</span>
+
+        <ul class="d-flex list-unstyled">
+          <li *ngFor="let tag of post.tags"><a routerLink="/blog/tag/{{tag}}" class="me-2">#{{tag}} </a></li>
+        </ul>
+      </div>
+
+      <div [innerHTML]="post.content | rawHtml"></div>
+
+      <div *ngIf="isAuthenticated" class="card my-5">
+        <div class="card-header">
+          Editor's Zone
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Attention!</h5>
+          <p class="card-text">You can edit the post as many times as you want but, there's no turning back from deleting a post. Be careful.</p>
+          <a routerLink="/posts/{{post.id}}" class="btn btn-primary btn-labeled me-3">
+            <span class="btn-label"><i class="bi bi-pencil"></i></span>
+            Edit
+          </a>
+          <button (click)="deletePost()" type="button" class="btn btn-labeled btn-danger">
+            <span class="btn-label"><i class="bi bi-trash"></i></span>
+            Delete
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-5">
+        <div class="content">
+          <disqus [identifier]="pageId"></disqus>
+        </div>
+      </div>
+    </div>
+  </div>
